@@ -1,0 +1,23 @@
+route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 1m
+  repeat_interval: 1h
+  receiver: 'sns-notification'
+
+receivers:
+  - name: 'sns-notification'
+    sns_configs:
+      - topic_arn: 'SNS_arn'
+        sigv4:
+          region: eu-central-1
+          profile: Ramzi
+          access_key: <access_key>
+          secret_key: <secret_key>
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']
